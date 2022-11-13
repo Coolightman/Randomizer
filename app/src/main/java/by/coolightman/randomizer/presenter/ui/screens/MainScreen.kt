@@ -1,10 +1,12 @@
 package by.coolightman.randomizer.presenter.ui.screens
 
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -34,13 +36,17 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import by.coolightman.randomizer.R
+import by.coolightman.randomizer.domain.model.RandomMode
+import by.coolightman.randomizer.presenter.ui.components.RandomModeChip
 import by.coolightman.randomizer.presenter.ui.theme.RandomizerTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainScreen(
     result: String,
-    onClickGenerate: () -> Unit
+    selectedMode: RandomMode,
+    onClickGenerate: () -> Unit,
+    onClickMode: (RandomMode) -> Unit
 ) {
     var isDropMenuExpanded by remember {
         mutableStateOf(false)
@@ -68,7 +74,7 @@ fun MainScreen(
                             modifier = Modifier.padding(horizontal = 16.dp)
                         ) {
                             Text(text = stringResource(R.string.dark_theme))
-                            Spacer(modifier = Modifier.width(8.dp))
+                            Spacer(modifier = Modifier.width(16.dp))
                             Switch(
                                 checked = true,
                                 onCheckedChange = {}
@@ -108,20 +114,84 @@ fun MainScreen(
                     style = MaterialTheme.typography.titleMedium
                 )
             }
+            Spacer(modifier = Modifier.fillMaxHeight(0.1f))
+            Row(
+                horizontalArrangement = Arrangement.SpaceEvenly,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                RandomModeChip(
+                    selectedMode = selectedMode,
+                    chipMode = RandomMode.TO_9,
+                    onClick = { onClickMode(it) }
+                )
+
+                RandomModeChip(
+                    selectedMode = selectedMode,
+                    chipMode = RandomMode.TO_99,
+                    onClick = { onClickMode(it) }
+                )
+
+                RandomModeChip(
+                    selectedMode = selectedMode,
+                    chipMode = RandomMode.TO_999,
+                    onClick = { onClickMode(it) }
+                )
+            }
+
+            Row(
+                horizontalArrangement = Arrangement.SpaceEvenly,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                RandomModeChip(
+                    selectedMode = selectedMode,
+                    chipMode = RandomMode.TO_10,
+                    onClick = { onClickMode(it) }
+                )
+
+                RandomModeChip(
+                    selectedMode = selectedMode,
+                    chipMode = RandomMode.TO_100,
+                    onClick = { onClickMode(it) }
+                )
+
+                RandomModeChip(
+                    selectedMode = selectedMode,
+                    chipMode = RandomMode.TO_1000,
+                    onClick = { onClickMode(it) }
+                )
+            }
+
+            Row(
+                horizontalArrangement = Arrangement.SpaceEvenly,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                RandomModeChip(
+                    selectedMode = selectedMode,
+                    chipMode = RandomMode.COIN,
+                    onClick = { onClickMode(it) }
+                )
+
+                RandomModeChip(
+                    selectedMode = selectedMode,
+                    chipMode = RandomMode.SPECIAL,
+                    onClick = { onClickMode(it) }
+                )
+            }
         }
     }
 }
 
 @Preview(
-    uiMode = UI_MODE_NIGHT_YES,
-    showSystemUi = true
+    uiMode = UI_MODE_NIGHT_YES
 )
-@Preview(showSystemUi = true)
 @Composable
 fun MainScreenPreview() {
     RandomizerTheme {
         MainScreen(
-            result = "00",
-            onClickGenerate = {})
+            result = "13",
+            selectedMode = RandomMode.TO_10,
+            onClickGenerate = {},
+            onClickMode = {}
+        )
     }
 }

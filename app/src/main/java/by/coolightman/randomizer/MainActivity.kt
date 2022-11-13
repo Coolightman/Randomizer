@@ -37,7 +37,9 @@ class MainActivity : ComponentActivity() {
 
                 MainScreen(
                     result = uiState.result,
-                    onClickGenerate = { viewModel.onClickGenerate() }
+                    selectedMode = uiState.selectedMode,
+                    onClickGenerate = { viewModel.onClickGenerate() },
+                    onClickMode = { viewModel.onClickMode(it) }
                 )
             }
         }
