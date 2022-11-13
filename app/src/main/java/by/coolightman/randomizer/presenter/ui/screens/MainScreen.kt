@@ -89,7 +89,7 @@ fun MainScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .fillMaxSize(0.5f)
-            ){
+            ) {
                 Text(
                     text = result,
                     textAlign = TextAlign.Center,
@@ -112,8 +112,11 @@ fun MainScreen(
     }
 }
 
-@Preview(uiMode = UI_MODE_NIGHT_YES)
-@Preview
+@Preview(
+    uiMode = UI_MODE_NIGHT_YES,
+    showSystemUi = true
+)
+@Preview(showSystemUi = true)
 @Composable
 fun MainScreenPreview() {
     RandomizerTheme {
