@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Randomizer</string>
+    <string name="dark_theme">Dark theme</string>
 </resources>
