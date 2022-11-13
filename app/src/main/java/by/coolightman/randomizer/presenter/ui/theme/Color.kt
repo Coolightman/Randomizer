@@ -1,4 +1,4 @@
-package by.coolightman.randomizer.ui.theme
+package by.coolightman.randomizer.presenter.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
