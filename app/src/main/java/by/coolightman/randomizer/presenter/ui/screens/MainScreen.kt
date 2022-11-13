@@ -110,7 +110,7 @@ fun MainScreen(
                     .height(56.dp)
             ) {
                 Text(
-                    text = "GENERATE",
+                    text = "Generate",
                     style = MaterialTheme.typography.titleMedium
                 )
             }
