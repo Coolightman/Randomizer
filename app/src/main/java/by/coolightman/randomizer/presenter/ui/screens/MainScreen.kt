@@ -1,6 +1,7 @@
 package by.coolightman.randomizer.presenter.ui.screens
 
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -10,7 +11,9 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.MoreVert
@@ -21,6 +24,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -55,6 +59,17 @@ fun MainScreen(
 ) {
     var isDropMenuExpanded by remember {
         mutableStateOf(false)
+    }
+
+    val isSpecialMenuVisible by remember(uiState.selectedMode) {
+        mutableStateOf(uiState.selectedMode == RandomMode.SPECIAL)
+    }
+
+    var minSpecialValue by remember {
+        mutableStateOf("0")
+    }
+    var maxSpecialValue by remember {
+        mutableStateOf("47")
     }
 
     val scrollState = rememberScrollState()
@@ -100,7 +115,7 @@ fun MainScreen(
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(360.dp)
+                    .height(320.dp)
             ) {
                 Text(
                     text = uiState.result,
@@ -108,7 +123,9 @@ fun MainScreen(
                     style = MaterialTheme.typography.displayLarge.copy(
                         fontSize = 72.sp
                     ),
-                    modifier = Modifier.align(Alignment.Center).padding(bottom = 56.dp)
+                    modifier = Modifier
+                        .align(Alignment.Center)
+                        .padding(bottom = 56.dp)
                 )
             }
 
@@ -185,6 +202,33 @@ fun MainScreen(
                     },
                     onClick = { onClickMode(it) }
                 )
+            }
+            AnimatedVisibility(
+                visible = isSpecialMenuVisible
+            ) {
+                Column(modifier = Modifier.fillMaxWidth()) {
+                    Spacer(modifier = Modifier.height(24.dp))
+
+                    Row(
+                        horizontalArrangement = Arrangement.SpaceEvenly,
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+
+                        OutlinedTextField(
+                            value = minSpecialValue,
+                            shape = RoundedCornerShape(24.dp),
+                            onValueChange = { minSpecialValue = it },
+                            modifier = Modifier.width(100.dp)
+                        )
+
+                        OutlinedTextField(
+                            value = maxSpecialValue,
+                            shape = RoundedCornerShape(24.dp),
+                            onValueChange = { maxSpecialValue = it },
+                            modifier = Modifier.width(100.dp)
+                        )
+                    }
+                }
             }
         }
     }
