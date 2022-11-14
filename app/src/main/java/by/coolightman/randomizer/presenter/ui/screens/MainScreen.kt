@@ -76,10 +76,11 @@ fun MainScreen(
         mutableStateOf("")
     }
     LaunchedEffect(uiState.selectedMode, minSpecialValue, maxSpecialValue) {
-        promptText = if (uiState.selectedMode == RandomMode.SPECIAL) {
-            "$minSpecialValue ≤ X ≤ $maxSpecialValue"
-        } else {
-            uiState.selectedMode.title
+        promptText = when(uiState.selectedMode){
+            RandomMode.SPECIAL -> "$minSpecialValue ≤ X ≤ $maxSpecialValue"
+            RandomMode.DICE -> ""
+            RandomMode.COIN -> ""
+            else -> uiState.selectedMode.description
         }
     }
 
