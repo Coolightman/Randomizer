@@ -16,11 +16,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.Button
-import androidx.compose.material3.DropdownMenu
-import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -28,7 +24,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -50,7 +45,6 @@ import by.coolightman.randomizer.R
 import by.coolightman.randomizer.domain.model.RandomMode
 import by.coolightman.randomizer.presenter.ui.components.NumberRangeSelect
 import by.coolightman.randomizer.presenter.ui.components.RandomModeChip
-import by.coolightman.randomizer.presenter.ui.components.SelectThemeRow
 import by.coolightman.randomizer.presenter.ui.theme.RandomizerTheme
 import kotlinx.coroutines.launch
 
@@ -67,10 +61,6 @@ fun MainScreen(
 
     val focusManager = LocalFocusManager.current
     val scope = rememberCoroutineScope()
-
-    var isDropMenuExpanded by remember {
-        mutableStateOf(false)
-    }
 
     val isSpecialMenuVisible by remember(uiState.selectedMode) {
         mutableStateOf(uiState.selectedMode == RandomMode.SPECIAL)
@@ -95,37 +85,7 @@ fun MainScreen(
 
     val scrollState = rememberScrollState()
 
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                title = {},
-                actions = {
-
-                    IconButton(onClick = { isDropMenuExpanded = true }) {
-                        Icon(
-                            Icons.Default.MoreVert,
-                            contentDescription = "more"
-                        )
-                    }
-
-                    DropdownMenu(
-                        expanded = isDropMenuExpanded,
-                        onDismissRequest = { isDropMenuExpanded = false }
-                    ) {
-                        DropdownMenuItem(
-                            text = {
-                                SelectThemeRow(isDarkMode = uiState.isDarkMode)
-                            },
-                            onClick = {
-                                isDropMenuExpanded = false
-                                onSwitchTheme()
-                            }
-                        )
-                    }
-                }
-            )
-        }
-    ) { paddingValues ->
+    Scaffold { paddingValues ->
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier
@@ -133,6 +93,23 @@ fun MainScreen(
                 .padding(paddingValues)
                 .verticalScroll(scrollState)
         ) {
+            Row(
+                horizontalArrangement = Arrangement.End,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(56.dp)
+            )
+            {
+                IconButton(onClick = { onSwitchTheme() }) {
+                    Icon(
+                        painter = painterResource(
+                            if (uiState.isDarkMode) R.drawable.ic_light_mode_24
+                            else R.drawable.ic_dark_mode_24
+                        ),
+                        contentDescription = "theme icon"
+                    )
+                }
+            }
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
