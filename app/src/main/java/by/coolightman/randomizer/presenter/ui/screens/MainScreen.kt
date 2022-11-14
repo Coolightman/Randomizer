@@ -32,9 +32,11 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import by.coolightman.randomizer.R
 import by.coolightman.randomizer.domain.model.RandomMode
 import by.coolightman.randomizer.presenter.ui.components.NumberRangeSelect
 import by.coolightman.randomizer.presenter.ui.components.RandomModeChip
@@ -145,6 +147,12 @@ fun MainScreen(
                 RandomModeChip(
                     selectedMode = uiState.selectedMode,
                     chipMode = RandomMode.COIN,
+                    leadingIcon = {
+                        Icon(
+                            painter = painterResource(id = R.drawable.ic_coin_24),
+                            contentDescription = "coin"
+                        )
+                    },
                     onClick = { onClickMode(it) }
                 )
 
@@ -153,6 +161,12 @@ fun MainScreen(
                 RandomModeChip(
                     selectedMode = uiState.selectedMode,
                     chipMode = RandomMode.DICE,
+                    leadingIcon = {
+                        Icon(
+                            painter = painterResource(id = R.drawable.ic_dice_24),
+                            contentDescription = "dice"
+                        )
+                    },
                     onClick = { onClickMode(it) }
                 )
 

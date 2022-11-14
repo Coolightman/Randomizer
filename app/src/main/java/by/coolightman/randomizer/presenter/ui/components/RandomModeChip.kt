@@ -16,11 +16,13 @@ import by.coolightman.randomizer.domain.model.RandomMode
 fun RandomModeChip(
     selectedMode: RandomMode,
     chipMode: RandomMode,
+    leadingIcon: @Composable (() -> Unit)? = null,
     onClick: (RandomMode) -> Unit
 ) {
     ElevatedFilterChip(
         selected = chipMode == selectedMode,
         shape = CircleShape,
+        leadingIcon = { leadingIcon?.invoke() },
         label = { Text(text = chipMode.title) },
         onClick = { onClick(chipMode) },
         modifier = Modifier
