@@ -8,19 +8,21 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import by.coolightman.randomizer.presenter.ui.screens.MainScreen
 import by.coolightman.randomizer.presenter.ui.screens.MainViewModel
 import by.coolightman.randomizer.presenter.ui.theme.RandomizerTheme
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         setContent {
-            val viewModel: MainViewModel = viewModel()
+            val viewModel = hiltViewModel<MainViewModel>()
             val uiState by viewModel.uiState.collectAsState()
 
             RandomizerTheme {
