@@ -3,6 +3,7 @@ package by.coolightman.randomizer.presenter.ui.screens
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import by.coolightman.randomizer.domain.model.RandomMode
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -83,8 +84,11 @@ class MainViewModel : ViewModel() {
     }
 
     fun switchTheme() {
-        _uiState.update { currentState ->
-            currentState.copy(isDarkMode = !currentState.isDarkMode)
+        viewModelScope.launch {
+            delay(100)
+            _uiState.update { currentState ->
+                currentState.copy(isDarkMode = !currentState.isDarkMode)
+            }
         }
     }
 }
