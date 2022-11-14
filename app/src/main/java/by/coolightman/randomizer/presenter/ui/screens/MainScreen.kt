@@ -66,11 +66,11 @@ fun MainScreen(
         mutableStateOf(uiState.selectedMode == RandomMode.SPECIAL)
     }
 
-    var minSpecialValue by remember {
-        mutableStateOf("0")
+    var minSpecialValue by remember(uiState.specialRangeMin) {
+        mutableStateOf(uiState.specialRangeMin.toString())
     }
-    var maxSpecialValue by remember {
-        mutableStateOf("47")
+    var maxSpecialValue by remember(uiState.specialRangeMax) {
+        mutableStateOf(uiState.specialRangeMax.toString())
     }
     var promptText by remember {
         mutableStateOf("")

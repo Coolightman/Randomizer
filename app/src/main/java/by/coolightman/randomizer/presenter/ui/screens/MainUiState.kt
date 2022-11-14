@@ -6,5 +6,7 @@ data class MainUiState(
     val result: String = "--",
     val selectedMode: RandomMode = RandomMode.TO_9,
     val selectedPlusOne: Boolean = false,
-    val isDarkMode: Boolean = true
+    val isDarkMode: Boolean = true,
+    val specialRangeMin: Int = 0,
+    val specialRangeMax: Int = 0
 )

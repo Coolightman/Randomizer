@@ -4,6 +4,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import by.coolightman.randomizer.domain.model.RandomMode
 import by.coolightman.randomizer.domain.repository.PreferencesRepository
+import by.coolightman.randomizer.util.MAX_RANGE_KEY
+import by.coolightman.randomizer.util.MIN_RANGE_KEY
+import by.coolightman.randomizer.util.PLUS_ONE_KEY
+import by.coolightman.randomizer.util.RANDOM_MODE_KEY
 import by.coolightman.randomizer.util.THEME_MODE_KEY
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
@@ -11,6 +15,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -25,9 +30,6 @@ class MainViewModel @Inject constructor(
 
     private val selectedMode = MutableStateFlow(RandomMode.TO_9)
 
-    private var specialRangeMin = 0
-    private var specialRangeMax = 47
-
     init {
         getPreferencesData()
         collectSelectedMode()
@@ -36,6 +38,38 @@ class MainViewModel @Inject constructor(
 
     private fun getPreferencesData() {
         getThemeMode()
+        getRandomMode()
+        getPlusOneState()
+        getSpecialRange()
+    }
+
+    private fun getPlusOneState() {
+        viewModelScope.launch {
+            _uiState.update { currentState ->
+                val value = preferencesRepository.getBoolean(PLUS_ONE_KEY, false).first()
+                currentState.copy(selectedPlusOne = value)
+            }
+        }
+    }
+
+    private fun getRandomMode() {
+        viewModelScope.launch {
+            _uiState.update { currentState ->
+                val modeIndex = preferencesRepository.getInt(RANDOM_MODE_KEY, 0).first()
+                currentState.copy(selectedMode = RandomMode.values()[modeIndex])
+            }
+        }
+    }
+
+    private fun getSpecialRange() {
+        viewModelScope.launch {
+            _uiState.update { currentState ->
+                currentState.copy(
+                    specialRangeMin = preferencesRepository.getInt(MIN_RANGE_KEY, 0).first(),
+                    specialRangeMax = preferencesRepository.getInt(MAX_RANGE_KEY, 14).first()
+                )
+            }
+        }
     }
 
     private fun getThemeMode() {
@@ -87,8 +121,10 @@ class MainViewModel @Inject constructor(
     }
 
     private fun generateBySpecialRange(): String {
-        return if (specialRangeMin < specialRangeMax) {
-            (specialRangeMin..specialRangeMax).random().toString()
+        val min = uiState.value.specialRangeMin
+        val max = uiState.value.specialRangeMax
+        return if (min < max) {
+            (min..max).random().toString()
         } else {
             "--"
         }
@@ -103,12 +139,18 @@ class MainViewModel @Inject constructor(
     }
 
     fun onClickMode(mode: RandomMode) {
-        selectedMode.update { mode }
+        viewModelScope.launch {
+            preferencesRepository.putInt(RANDOM_MODE_KEY, mode.ordinal)
+            selectedMode.update { mode }
+        }
     }
 
     fun onClickPlusOne() {
-        _uiState.update { currentState ->
-            currentState.copy(selectedPlusOne = !currentState.selectedPlusOne)
+        viewModelScope.launch {
+            _uiState.update { currentState ->
+                preferencesRepository.putBoolean(PLUS_ONE_KEY, !currentState.selectedPlusOne)
+                currentState.copy(selectedPlusOne = !currentState.selectedPlusOne)
+            }
         }
     }
 
@@ -120,7 +162,15 @@ class MainViewModel @Inject constructor(
     }
 
     fun setSpecialRange(min: Int, max: Int) {
-        specialRangeMin = min
-        specialRangeMax = max
+        _uiState.update { currentState ->
+            currentState.copy(
+                specialRangeMin = min,
+                specialRangeMax = max
+            )
+        }
+        viewModelScope.launch {
+            preferencesRepository.putInt(MIN_RANGE_KEY, min)
+            preferencesRepository.putInt(MAX_RANGE_KEY, max)
+        }
     }
 }
