@@ -3,7 +3,6 @@ package by.coolightman.randomizer
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.collectAsState
@@ -25,9 +24,9 @@ class MainActivity : ComponentActivity() {
             val viewModel = hiltViewModel<MainViewModel>()
             val uiState by viewModel.uiState.collectAsState()
 
-            RandomizerTheme {
+            RandomizerTheme(uiState.isDarkMode) {
                 val systemUiController = rememberSystemUiController()
-                val useDarkIcons = !isSystemInDarkTheme()
+                val useDarkIcons = !uiState.isDarkMode
                 val barsColor = MaterialTheme.colorScheme.background
 
                 SideEffect {

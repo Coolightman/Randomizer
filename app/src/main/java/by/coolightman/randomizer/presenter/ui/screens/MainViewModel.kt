@@ -3,6 +3,8 @@ package by.coolightman.randomizer.presenter.ui.screens
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import by.coolightman.randomizer.domain.model.RandomMode
+import by.coolightman.randomizer.domain.repository.PreferencesRepository
+import by.coolightman.randomizer.util.THEME_MODE_KEY
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -11,9 +13,12 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @HiltViewModel
-class MainViewModel : ViewModel() {
+class MainViewModel @Inject constructor(
+    private val preferencesRepository: PreferencesRepository
+) : ViewModel() {
 
     private val _uiState = MutableStateFlow(MainUiState())
     val uiState: StateFlow<MainUiState> = _uiState.asStateFlow()
@@ -24,8 +29,23 @@ class MainViewModel : ViewModel() {
     private var specialRangeMax = 47
 
     init {
+        getPreferencesData()
         collectSelectedMode()
         getRandomModeProperty()
+    }
+
+    private fun getPreferencesData() {
+        getThemeMode()
+    }
+
+    private fun getThemeMode() {
+        viewModelScope.launch {
+            preferencesRepository.getBoolean(THEME_MODE_KEY, true).collectLatest {
+                _uiState.update { currentState ->
+                    currentState.copy(isDarkMode = it)
+                }
+            }
+        }
     }
 
     private fun collectSelectedMode() {
@@ -95,9 +115,7 @@ class MainViewModel : ViewModel() {
     fun switchTheme() {
         viewModelScope.launch {
             delay(100)
-            _uiState.update { currentState ->
-                currentState.copy(isDarkMode = !currentState.isDarkMode)
-            }
+            preferencesRepository.putBoolean(THEME_MODE_KEY, !uiState.value.isDarkMode)
         }
     }
 
