@@ -36,10 +36,11 @@ class MainActivity : ComponentActivity() {
                 }
 
                 MainScreen(
-                    result = uiState.result,
-                    selectedMode = uiState.selectedMode,
+                    uiState = uiState,
                     onClickGenerate = { viewModel.onClickGenerate() },
-                    onClickMode = { viewModel.onClickMode(it) }
+                    onClickMode = { viewModel.onClickMode(it) },
+                    onClickPlusOne = {viewModel.onClickPlusOne()},
+                    onSwitchTheme = {viewModel.switchTheme()}
                 )
             }
         }

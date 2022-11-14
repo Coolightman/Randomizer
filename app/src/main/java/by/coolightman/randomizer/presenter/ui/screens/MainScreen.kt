@@ -16,12 +16,12 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.Button
 import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
@@ -31,22 +31,24 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import by.coolightman.randomizer.R
 import by.coolightman.randomizer.domain.model.RandomMode
+import by.coolightman.randomizer.presenter.ui.components.NumberRangeSelect
 import by.coolightman.randomizer.presenter.ui.components.RandomModeChip
+import by.coolightman.randomizer.presenter.ui.components.SelectThemeRow
 import by.coolightman.randomizer.presenter.ui.theme.RandomizerTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainScreen(
-    result: String,
-    selectedMode: RandomMode,
+    uiState: MainUiState,
     onClickGenerate: () -> Unit,
-    onClickMode: (RandomMode) -> Unit
+    onClickMode: (RandomMode) -> Unit,
+    onClickPlusOne: () -> Unit,
+    onSwitchTheme: () -> Unit
 ) {
     var isDropMenuExpanded by remember {
         mutableStateOf(false)
@@ -69,17 +71,15 @@ fun MainScreen(
                         expanded = isDropMenuExpanded,
                         onDismissRequest = { isDropMenuExpanded = false }
                     ) {
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            modifier = Modifier.padding(horizontal = 16.dp)
-                        ) {
-                            Text(text = stringResource(R.string.dark_theme))
-                            Spacer(modifier = Modifier.width(16.dp))
-                            Switch(
-                                checked = true,
-                                onCheckedChange = {}
-                            )
-                        }
+                        DropdownMenuItem(
+                            text = {
+                                SelectThemeRow(isDarkMode = uiState.isDarkMode)
+                            },
+                            onClick = {
+                                isDropMenuExpanded = false
+                                onSwitchTheme()
+                            }
+                        )
                     }
                 }
             )
@@ -97,12 +97,13 @@ fun MainScreen(
                     .fillMaxSize(0.5f)
             ) {
                 Text(
-                    text = result,
+                    text = uiState.result,
                     textAlign = TextAlign.Center,
                     style = MaterialTheme.typography.displayLarge,
                     modifier = Modifier.align(Alignment.Center)
                 )
             }
+
             Button(
                 onClick = { onClickGenerate() },
                 modifier = Modifier
@@ -114,65 +115,51 @@ fun MainScreen(
                     style = MaterialTheme.typography.titleMedium
                 )
             }
-            Spacer(modifier = Modifier.fillMaxHeight(0.1f))
+
+            Spacer(modifier = Modifier.height(4.dp))
+
+            Text(
+                text = uiState.selectedMode.title,
+                textAlign = TextAlign.Center,
+                style = MaterialTheme.typography.labelMedium.copy(
+                    color = Color.Gray.copy(0.5f)
+                ),
+                modifier = Modifier.fillMaxWidth()
+            )
+
+            Spacer(modifier = Modifier.fillMaxHeight(0.08f))
+
+            NumberRangeSelect(
+                selectedMode = uiState.selectedMode,
+                selectedPlusOne = uiState.selectedPlusOne,
+                onClickMode = { onClickMode(it) },
+                onClickPlusOne = { onClickPlusOne() }
+            )
+
+            Spacer(modifier = Modifier.fillMaxHeight(0.08f))
+
             Row(
-                horizontalArrangement = Arrangement.SpaceEvenly,
+                horizontalArrangement = Arrangement.Center,
                 modifier = Modifier.fillMaxWidth()
             ) {
                 RandomModeChip(
-                    selectedMode = selectedMode,
-                    chipMode = RandomMode.TO_9,
-                    onClick = { onClickMode(it) }
-                )
-
-                RandomModeChip(
-                    selectedMode = selectedMode,
-                    chipMode = RandomMode.TO_99,
-                    onClick = { onClickMode(it) }
-                )
-
-                RandomModeChip(
-                    selectedMode = selectedMode,
-                    chipMode = RandomMode.TO_999,
-                    onClick = { onClickMode(it) }
-                )
-            }
-
-            Row(
-                horizontalArrangement = Arrangement.SpaceEvenly,
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                RandomModeChip(
-                    selectedMode = selectedMode,
-                    chipMode = RandomMode.TO_10,
-                    onClick = { onClickMode(it) }
-                )
-
-                RandomModeChip(
-                    selectedMode = selectedMode,
-                    chipMode = RandomMode.TO_100,
-                    onClick = { onClickMode(it) }
-                )
-
-                RandomModeChip(
-                    selectedMode = selectedMode,
-                    chipMode = RandomMode.TO_1000,
-                    onClick = { onClickMode(it) }
-                )
-            }
-
-            Row(
-                horizontalArrangement = Arrangement.SpaceEvenly,
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                RandomModeChip(
-                    selectedMode = selectedMode,
+                    selectedMode = uiState.selectedMode,
                     chipMode = RandomMode.COIN,
                     onClick = { onClickMode(it) }
                 )
 
+                Spacer(modifier = Modifier.width(32.dp))
+
                 RandomModeChip(
-                    selectedMode = selectedMode,
+                    selectedMode = uiState.selectedMode,
+                    chipMode = RandomMode.DICE,
+                    onClick = { onClickMode(it) }
+                )
+
+                Spacer(modifier = Modifier.width(32.dp))
+
+                RandomModeChip(
+                    selectedMode = uiState.selectedMode,
                     chipMode = RandomMode.SPECIAL,
                     onClick = { onClickMode(it) }
                 )
@@ -188,10 +175,11 @@ fun MainScreen(
 fun MainScreenPreview() {
     RandomizerTheme {
         MainScreen(
-            result = "13",
-            selectedMode = RandomMode.TO_10,
+            uiState = MainUiState("13", RandomMode.TO_9),
             onClickGenerate = {},
-            onClickMode = {}
+            onClickMode = {},
+            onClickPlusOne = {},
+            onSwitchTheme = {}
         )
     }
 }

@@ -33,7 +33,7 @@ class MainViewModel : ViewModel() {
     }
 
     private fun getRandomModeProperty() {
-        selectedMode.update { RandomMode.TO_100 }
+        selectedMode.update { RandomMode.TO_9 }
     }
 
     fun onClickGenerate() {
@@ -51,8 +51,13 @@ class MainViewModel : ViewModel() {
             RandomMode.TO_999 -> (0..999).random().toString()
             RandomMode.TO_1000 -> (1..1000).random().toString()
             RandomMode.COIN -> tossCoin()
+            RandomMode.DICE -> rollTheDice()
             RandomMode.SPECIAL -> generateBySpecialRange()
         }
+    }
+
+    private fun rollTheDice(): String {
+        return "Dice"
     }
 
     private fun generateBySpecialRange(): String {
@@ -69,5 +74,17 @@ class MainViewModel : ViewModel() {
 
     fun onClickMode(mode: RandomMode) {
         selectedMode.update { mode }
+    }
+
+    fun onClickPlusOne() {
+        _uiState.update { currentState ->
+            currentState.copy(selectedPlusOne = !currentState.selectedPlusOne)
+        }
+    }
+
+    fun switchTheme() {
+        _uiState.update { currentState ->
+            currentState.copy(isDarkMode = !currentState.isDarkMode)
+        }
     }
 }
