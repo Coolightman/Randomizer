@@ -28,12 +28,8 @@ class MainViewModel @Inject constructor(
     private val _uiState = MutableStateFlow(MainUiState())
     val uiState: StateFlow<MainUiState> = _uiState.asStateFlow()
 
-    private val selectedMode = MutableStateFlow(RandomMode.TO_9)
-
     init {
         getPreferencesData()
-        collectSelectedMode()
-        getRandomModeProperty()
     }
 
     private fun getPreferencesData() {
@@ -54,8 +50,8 @@ class MainViewModel @Inject constructor(
 
     private fun getRandomMode() {
         viewModelScope.launch {
+            val modeIndex = preferencesRepository.getInt(RANDOM_MODE_KEY, 0).first()
             _uiState.update { currentState ->
-                val modeIndex = preferencesRepository.getInt(RANDOM_MODE_KEY, 0).first()
                 currentState.copy(selectedMode = RandomMode.values()[modeIndex])
             }
         }
@@ -82,20 +78,6 @@ class MainViewModel @Inject constructor(
         }
     }
 
-    private fun collectSelectedMode() {
-        viewModelScope.launch {
-            selectedMode.collectLatest { mode ->
-                _uiState.update { currentState ->
-                    currentState.copy(selectedMode = mode)
-                }
-            }
-        }
-    }
-
-    private fun getRandomModeProperty() {
-        selectedMode.update { RandomMode.TO_9 }
-    }
-
     fun onClickGenerate() {
         _uiState.update { currentState ->
             currentState.copy(result = getRandomValue())
@@ -103,7 +85,7 @@ class MainViewModel @Inject constructor(
     }
 
     private fun getRandomValue(): String {
-        return when (selectedMode.value) {
+        return when (uiState.value.selectedMode) {
             RandomMode.TO_9 -> (0..9).random().toString()
             RandomMode.TO_10 -> (1..10).random().toString()
             RandomMode.TO_99 -> (0..99).random().toString()
@@ -141,7 +123,9 @@ class MainViewModel @Inject constructor(
     fun onClickMode(mode: RandomMode) {
         viewModelScope.launch {
             preferencesRepository.putInt(RANDOM_MODE_KEY, mode.ordinal)
-            selectedMode.update { mode }
+            _uiState.update { currentState ->
+                currentState.copy(selectedMode = mode)
+            }
         }
     }
 
