@@ -18,6 +18,9 @@ class MainViewModel : ViewModel() {
 
     private val selectedMode = MutableStateFlow(RandomMode.TO_9)
 
+    private var specialRangeMin = 0
+    private var specialRangeMax = 47
+
     init {
         collectSelectedMode()
         getRandomModeProperty()
@@ -62,7 +65,11 @@ class MainViewModel : ViewModel() {
     }
 
     private fun generateBySpecialRange(): String {
-        return "Special"
+        return if (specialRangeMin < specialRangeMax) {
+            (specialRangeMin..specialRangeMax).random().toString()
+        } else {
+            "--"
+        }
     }
 
     private fun tossCoin(): String {
@@ -90,5 +97,10 @@ class MainViewModel : ViewModel() {
                 currentState.copy(isDarkMode = !currentState.isDarkMode)
             }
         }
+    }
+
+    fun setSpecialRange(min: Int, max: Int) {
+        specialRangeMin = min
+        specialRangeMax = max
     }
 }

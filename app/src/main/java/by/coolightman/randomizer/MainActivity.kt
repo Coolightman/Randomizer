@@ -39,8 +39,11 @@ class MainActivity : ComponentActivity() {
                     uiState = uiState,
                     onClickGenerate = { viewModel.onClickGenerate() },
                     onClickMode = { viewModel.onClickMode(it) },
-                    onClickPlusOne = {viewModel.onClickPlusOne()},
-                    onSwitchTheme = {viewModel.switchTheme()}
+                    onClickPlusOne = { viewModel.onClickPlusOne() },
+                    onSwitchTheme = { viewModel.switchTheme() },
+                    onUpdateSpecialRange = { min, max ->
+                        viewModel.setSpecialRange(min, max)
+                    }
                 )
             }
         }
