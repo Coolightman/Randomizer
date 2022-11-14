@@ -18,9 +18,11 @@ fun NumberRangeSelect(
     onClickPlusOne: () -> Unit
 ) {
     Row(
-        horizontalArrangement = Arrangement.Center,
+        horizontalArrangement = Arrangement.SpaceEvenly,
         modifier = Modifier.fillMaxWidth()
     ) {
+
+        Spacer(modifier = Modifier.width(1.dp))
 
         RandomModeChip(
             selectedMode = selectedMode,
@@ -29,16 +31,12 @@ fun NumberRangeSelect(
             onClick = { onClickMode(it) }
         )
 
-        Spacer(modifier = Modifier.width(16.dp))
-
         RandomModeChip(
             selectedMode = selectedMode,
             chipMode = if (selectedPlusOne) RandomMode.TO_100
             else RandomMode.TO_99,
             onClick = { onClickMode(it) }
         )
-
-        Spacer(modifier = Modifier.width(16.dp))
 
         RandomModeChip(
             selectedMode = selectedMode,
@@ -47,11 +45,13 @@ fun NumberRangeSelect(
             onClick = { onClickMode(it) }
         )
 
-        Spacer(modifier = Modifier.width(32.dp))
+        Spacer(modifier = Modifier.width(1.dp))
 
         PlusOneChip(
             selected = selectedPlusOne,
             onClick = { onClickPlusOne() }
         )
+
+        Spacer(modifier = Modifier.width(1.dp))
     }
 }

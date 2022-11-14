@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material3.Button
@@ -141,7 +140,7 @@ fun MainScreen(
             Spacer(modifier = Modifier.fillMaxHeight(0.08f))
 
             Row(
-                horizontalArrangement = Arrangement.Center,
+                horizontalArrangement = Arrangement.SpaceEvenly,
                 modifier = Modifier.fillMaxWidth()
             ) {
                 RandomModeChip(
@@ -149,32 +148,34 @@ fun MainScreen(
                     chipMode = RandomMode.COIN,
                     leadingIcon = {
                         Icon(
-                            painter = painterResource(id = R.drawable.ic_coin_24),
+                            painter = painterResource(R.drawable.ic_coin_24),
                             contentDescription = "coin"
                         )
                     },
                     onClick = { onClickMode(it) }
                 )
 
-                Spacer(modifier = Modifier.width(32.dp))
-
                 RandomModeChip(
                     selectedMode = uiState.selectedMode,
                     chipMode = RandomMode.DICE,
                     leadingIcon = {
                         Icon(
-                            painter = painterResource(id = R.drawable.ic_dice_24),
+                            painter = painterResource(R.drawable.ic_dice_24),
                             contentDescription = "dice"
                         )
                     },
                     onClick = { onClickMode(it) }
                 )
 
-                Spacer(modifier = Modifier.width(32.dp))
-
                 RandomModeChip(
                     selectedMode = uiState.selectedMode,
                     chipMode = RandomMode.SPECIAL,
+                    leadingIcon = {
+                        Icon(
+                            painter = painterResource(R.drawable.ic_special_24),
+                            contentDescription = "special"
+                        )
+                    },
                     onClick = { onClickMode(it) }
                 )
             }
@@ -182,9 +183,7 @@ fun MainScreen(
     }
 }
 
-@Preview(
-    uiMode = UI_MODE_NIGHT_YES
-)
+@Preview(uiMode = UI_MODE_NIGHT_YES)
 @Composable
 fun MainScreenPreview() {
     RandomizerTheme {
