@@ -207,7 +207,8 @@ fun MainScreen(
                     }
                 },
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = Color.Transparent
+                    containerColor = Color.Transparent,
+                    contentColor = Color(0xFFE0EBF1)
                 ),
                 contentPadding = PaddingValues(),
                 modifier = Modifier
