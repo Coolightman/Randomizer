@@ -3,6 +3,7 @@ package by.coolightman.randomizer.presenter.ui.screens
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -25,6 +26,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -43,6 +45,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalFocusManager
@@ -203,18 +206,37 @@ fun MainScreen(
                         scrollState.animateScrollTo(0)
                     }
                 },
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = Color.Transparent
+                ),
+                contentPadding = PaddingValues(),
                 modifier = Modifier
                     .fillMaxWidth(0.4f)
                     .height(56.dp)
             ) {
-                Text(
-                    text = when (uiState.selectedMode) {
-                        RandomMode.COIN -> "Toss"
-                        RandomMode.DICE -> "Roll"
-                        else -> "Generate"
-                    },
-                    style = MaterialTheme.typography.titleMedium
-                )
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .background(
+                            Brush.linearGradient(
+                                colors = listOf(
+                                    Color(0xFF0B81E6),
+                                    Color(0xFFA332D5),
+                                    Color(0xFFee2c8d)
+                                )
+                            )
+                        )
+                ) {
+                    Text(
+                        text = when (uiState.selectedMode) {
+                            RandomMode.COIN -> "Toss"
+                            RandomMode.DICE -> "Roll"
+                            else -> "Generate"
+                        },
+                        style = MaterialTheme.typography.titleMedium,
+                        modifier = Modifier.align(Alignment.Center)
+                    )
+                }
             }
 
             Spacer(modifier = Modifier.height(4.dp))
