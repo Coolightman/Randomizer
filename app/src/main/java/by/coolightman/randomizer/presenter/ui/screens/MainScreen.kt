@@ -220,9 +220,9 @@ fun MainScreen(
                         .background(
                             Brush.linearGradient(
                                 colors = listOf(
-                                    Color(0xFF0B81E6),
-                                    Color(0xFFA332D5),
-                                    Color(0xFFee2c8d)
+                                    Color(0xFF1F77C2),
+                                    Color(0xFFA629DD),
+                                    Color(0xFFE72B57)
                                 )
                             )
                         )
