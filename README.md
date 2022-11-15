@@ -6,7 +6,7 @@ Kotlin, MVVM, Jetpack compose, Hilt, Accompanist, Material 3
 ## _Features_ 
   - generate a random number
   - toss a coin
-  - roll the dice
+  - roll a dice
   
 ## _Download_
 [Play Market](https://play.google.com/store/apps/details?id=by.coolightman.randomizer)
