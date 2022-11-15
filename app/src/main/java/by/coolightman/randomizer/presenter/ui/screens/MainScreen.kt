@@ -295,7 +295,7 @@ fun MainScreen(
                                         verticalAlignment = Alignment.CenterVertically,
                                         modifier = Modifier
                                             .fillMaxSize()
-                                            .padding(horizontal = 4.dp)
+                                            .padding(horizontal = 6.dp)
                                     ) {
                                         Text(text = resultItem.value.toString())
                                     }
