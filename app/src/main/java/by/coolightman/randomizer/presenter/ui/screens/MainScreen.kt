@@ -2,6 +2,7 @@ package by.coolightman.randomizer.presenter.ui.screens
 
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -11,6 +12,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -36,6 +38,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -76,7 +79,7 @@ fun MainScreen(
         mutableStateOf("")
     }
     LaunchedEffect(uiState.selectedMode, minSpecialValue, maxSpecialValue) {
-        promptText = when(uiState.selectedMode){
+        promptText = when (uiState.selectedMode) {
             RandomMode.SPECIAL -> "$minSpecialValue ≤ X ≤ $maxSpecialValue"
             RandomMode.DICE -> ""
             RandomMode.COIN -> ""
@@ -116,16 +119,51 @@ fun MainScreen(
                     .fillMaxWidth()
                     .height(320.dp)
             ) {
-                Text(
-                    text = uiState.result,
-                    textAlign = TextAlign.Center,
-                    style = MaterialTheme.typography.displayLarge.copy(
-                        fontSize = 72.sp
-                    ),
-                    modifier = Modifier
-                        .align(Alignment.Center)
-                        .padding(bottom = 56.dp)
-                )
+                when (uiState.selectedMode) {
+                    RandomMode.COIN -> {
+                        Column(
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            modifier = Modifier
+                                .fillMaxWidth(0.6f)
+                                .align(Alignment.Center)
+                        ) {
+                            Image(
+                                painter = painterResource(uiState.tossedCoinFace.imgRes),
+                                contentDescription = "coin face",
+                                modifier = Modifier
+                            )
+                            Text(
+                                text = stringResource(uiState.tossedCoinFace.descriptionRes),
+                                style = MaterialTheme.typography.labelMedium.copy(
+                                    color = Color.Gray.copy(0.5f)
+                                )
+                            )
+                            Spacer(modifier = Modifier.height(40.dp))
+                        }
+                    }
+                    RandomMode.DICE -> {
+                        Image(
+                            painter = painterResource(uiState.rolledDiceFace.imgRes),
+                            contentDescription = "dice face",
+                            modifier = Modifier
+                                .align(Alignment.Center)
+                                .padding(bottom = 56.dp)
+                                .size(120.dp)
+                        )
+                    }
+                    else -> {
+                        Text(
+                            text = uiState.result,
+                            textAlign = TextAlign.Center,
+                            style = MaterialTheme.typography.displayLarge.copy(
+                                fontSize = 72.sp
+                            ),
+                            modifier = Modifier
+                                .align(Alignment.Center)
+                                .padding(bottom = 56.dp)
+                        )
+                    }
+                }
             }
 
             Button(
@@ -148,7 +186,11 @@ fun MainScreen(
                     .height(56.dp)
             ) {
                 Text(
-                    text = "Generate",
+                    text = when (uiState.selectedMode) {
+                        RandomMode.COIN -> "Toss"
+                        RandomMode.DICE -> "Roll"
+                        else -> "Generate"
+                    },
                     style = MaterialTheme.typography.titleMedium
                 )
             }
@@ -268,7 +310,7 @@ fun MainScreen(
 fun MainScreenPreview() {
     RandomizerTheme {
         MainScreen(
-            uiState = MainUiState("13", RandomMode.TO_9),
+            uiState = MainUiState("13", RandomMode.COIN),
             onClickGenerate = {},
             onClickMode = {},
             onClickPlusOne = {},

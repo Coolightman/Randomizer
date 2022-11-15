@@ -2,4 +2,6 @@
     <string name="app_name">Randomizer</string>
     <string name="dark_theme">Dark theme</string>
     <string name="light_theme">Light theme</string>
+    <string name="coin_heads_description">Heads</string>
+    <string name="coin_tails_description">Tails</string>
 </resources>

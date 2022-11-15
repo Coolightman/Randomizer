@@ -2,8 +2,11 @@ package by.coolightman.randomizer.presenter.ui.screens
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import by.coolightman.randomizer.domain.model.CoinFace
+import by.coolightman.randomizer.domain.model.DiceFace
 import by.coolightman.randomizer.domain.model.RandomMode
 import by.coolightman.randomizer.domain.repository.PreferencesRepository
+import by.coolightman.randomizer.util.EMPTY_NUMBER
 import by.coolightman.randomizer.util.MAX_RANGE_KEY
 import by.coolightman.randomizer.util.MIN_RANGE_KEY
 import by.coolightman.randomizer.util.PLUS_ONE_KEY
@@ -99,6 +102,10 @@ class MainViewModel @Inject constructor(
     }
 
     private fun rollTheDice(): String {
+        val result = (0..5).random()
+        _uiState.update { currentState ->
+            currentState.copy(rolledDiceFace = DiceFace.values()[result])
+        }
         return "Dice"
     }
 
@@ -108,23 +115,26 @@ class MainViewModel @Inject constructor(
         return if (min < max) {
             (min..max).random().toString()
         } else {
-            "--"
+            EMPTY_NUMBER
         }
     }
 
     private fun tossCoin(): String {
-        return when ((0..1).random()) {
-            0 -> "HEADS"
-            1 -> "TAILS"
-            else -> "Error"
+        val result = (0..1).random()
+        _uiState.update { currentState ->
+            currentState.copy(tossedCoinFace = CoinFace.values()[result])
         }
+        return "Coin"
     }
 
     fun onClickMode(mode: RandomMode) {
         viewModelScope.launch {
             preferencesRepository.putInt(RANDOM_MODE_KEY, mode.ordinal)
             _uiState.update { currentState ->
-                currentState.copy(selectedMode = mode)
+                currentState.copy(
+                    selectedMode = mode,
+                    result = EMPTY_NUMBER
+                )
             }
         }
     }
