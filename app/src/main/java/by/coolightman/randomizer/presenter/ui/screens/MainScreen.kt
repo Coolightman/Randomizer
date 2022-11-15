@@ -230,9 +230,9 @@ fun MainScreen(
                 ) {
                     Text(
                         text = when (uiState.selectedMode) {
-                            RandomMode.COIN -> "Toss"
-                            RandomMode.DICE -> "Roll"
-                            else -> "Generate"
+                            RandomMode.COIN -> stringResource(R.string.toss_coin)
+                            RandomMode.DICE -> stringResource(R.string.roll_dice)
+                            else -> stringResource(R.string.generate_number)
                         },
                         style = MaterialTheme.typography.titleMedium,
                         modifier = Modifier.align(Alignment.Center)
@@ -372,14 +372,15 @@ fun MainScreen(
                     Spacer(modifier = Modifier.height(12.dp))
 
                     Row(
-                        horizontalArrangement = Arrangement.SpaceEvenly,
+                        horizontalArrangement = Arrangement.Center,
+                        verticalAlignment = Alignment.CenterVertically,
                         modifier = Modifier.fillMaxWidth()
                     ) {
 
                         OutlinedTextField(
                             value = minSpecialValue,
                             shape = RoundedCornerShape(16.dp),
-                            placeholder = { Text(text = "min") },
+                            placeholder = { Text(text = stringResource(R.string.min)) },
                             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                             maxLines = 1,
                             onValueChange = { value ->
@@ -390,10 +391,19 @@ fun MainScreen(
                             modifier = Modifier.width(90.dp)
                         )
 
+                        Spacer(modifier = Modifier.width(16.dp))
+
+                        Text(
+                            text = "≤ X ≤",
+                            style = MaterialTheme.typography.titleMedium
+                        )
+
+                        Spacer(modifier = Modifier.width(16.dp))
+
                         OutlinedTextField(
                             value = maxSpecialValue,
                             shape = RoundedCornerShape(16.dp),
-                            placeholder = { Text(text = "max") },
+                            placeholder = { Text(text = stringResource(R.string.max)) },
                             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                             maxLines = 1,
                             onValueChange = { value ->
@@ -423,7 +433,7 @@ fun MainScreenPreview() {
             ResultItem(3, RandomMode.SPECIAL, 23),
         )
         MainScreen(
-            uiState = MainUiState("13", RandomMode.COIN, history = history),
+            uiState = MainUiState("13", RandomMode.SPECIAL, history = history),
             onClickGenerate = {},
             onClickMode = {},
             onClickPlusOne = {},

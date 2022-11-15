@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Randomizer</string>
+    <string name="dark_theme">Темная тема</string>
+    <string name="light_theme">Светлая тема</string>
+    <string name="coin_heads_description">Орёл</string>
+    <string name="coin_tails_description">Решка</string>
+    <string name="toss_coin">Подбросить</string>
+    <string name="roll_dice">Бросить</string>
+    <string name="generate_number">Получить</string>
+    <string name="coin_bt">Монетка</string>
+    <string name="dice_bt">Кость</string>
+    <string name="special_bt">Спец.</string>
+    <string name="min">мин.</string>
+    <string name="max">макс.</string>
+    <string name="random_0_9">0..9</string>
+    <string name="random_1_10">1..10</string>
+    <string name="random_0_99">0..99</string>
+    <string name="random_1_100">1..100</string>
+    <string name="random_0_999">0..999</string>
+    <string name="random_1_1000">1..1000</string>
+</resources>
