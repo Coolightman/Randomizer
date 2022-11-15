@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import by.coolightman.randomizer.domain.model.CoinFace
 import by.coolightman.randomizer.domain.model.DiceFace
 import by.coolightman.randomizer.domain.model.RandomMode
+import by.coolightman.randomizer.domain.model.ResultItem
 import by.coolightman.randomizer.domain.repository.PreferencesRepository
 import by.coolightman.randomizer.util.EMPTY_NUMBER
 import by.coolightman.randomizer.util.MAX_RANGE_KEY
@@ -82,49 +83,73 @@ class MainViewModel @Inject constructor(
     }
 
     fun onClickGenerate() {
-        _uiState.update { currentState ->
-            currentState.copy(result = getRandomValue())
-        }
-    }
-
-    private fun getRandomValue(): String {
-        return when (uiState.value.selectedMode) {
-            RandomMode.TO_9 -> (0..9).random().toString()
-            RandomMode.TO_10 -> (1..10).random().toString()
-            RandomMode.TO_99 -> (0..99).random().toString()
-            RandomMode.TO_100 -> (1..100).random().toString()
-            RandomMode.TO_999 -> (0..999).random().toString()
-            RandomMode.TO_1000 -> (1..1000).random().toString()
+        when (uiState.value.selectedMode) {
             RandomMode.COIN -> tossCoin()
             RandomMode.DICE -> rollTheDice()
             RandomMode.SPECIAL -> generateBySpecialRange()
+            else -> generateByPredefinedMode(uiState.value.selectedMode)
         }
     }
 
-    private fun rollTheDice(): String {
+    private fun generateByPredefinedMode(selectedMode: RandomMode) {
+        val result = when (selectedMode) {
+            RandomMode.TO_9 -> (0..9).random()
+            RandomMode.TO_10 -> (1..10).random()
+            RandomMode.TO_99 -> (0..99).random()
+            RandomMode.TO_100 -> (1..100).random()
+            RandomMode.TO_999 -> (0..999).random()
+            RandomMode.TO_1000 -> (1..1000).random()
+            else -> -1
+        }
+        updateHistory(selectedMode, result)
+        updateResult(result.toString())
+    }
+
+    private fun rollTheDice() {
         val result = (0..5).random()
+        updateHistory(RandomMode.DICE, result)
         _uiState.update { currentState ->
-            currentState.copy(rolledDiceFace = DiceFace.values()[result])
+            currentState.copy(
+                rolledDiceFace = DiceFace.values()[result]
+            )
         }
-        return "Dice"
     }
 
-    private fun generateBySpecialRange(): String {
+    private fun generateBySpecialRange() {
         val min = uiState.value.specialRangeMin
         val max = uiState.value.specialRangeMax
-        return if (min < max) {
-            (min..max).random().toString()
+        if (min < max) {
+            val result = (min..max).random()
+            updateHistory(RandomMode.SPECIAL, result)
+            updateResult(result.toString())
         } else {
-            EMPTY_NUMBER
+            updateResult(EMPTY_NUMBER)
         }
     }
 
-    private fun tossCoin(): String {
-        val result = (0..1).random()
+    private fun updateResult(result: String) {
         _uiState.update { currentState ->
-            currentState.copy(tossedCoinFace = CoinFace.values()[result])
+            currentState.copy(result = result)
         }
-        return "Coin"
+    }
+
+    private fun updateHistory(type: RandomMode, value: Int) {
+        _uiState.update { currentState ->
+            val updatedHistory = currentState.history.toMutableList().apply {
+                add(ResultItem(type = type, value = value))
+            }.sortedByDescending { it.createdAt }
+            currentState.copy(history = updatedHistory)
+        }
+    }
+
+    private fun tossCoin() {
+        val result = (0..1).random()
+        updateHistory(RandomMode.COIN, result)
+        _uiState.update { currentState ->
+            currentState.copy(
+                tossedCoinFace = CoinFace.values()[result]
+            )
+        }
     }
 
     fun onClickMode(mode: RandomMode) {
