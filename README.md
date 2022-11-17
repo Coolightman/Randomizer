@@ -11,7 +11,7 @@ Kotlin, MVVM, Jetpack compose, Hilt, Accompanist, Material 3
 ## _Download_
 [Play Market](https://play.google.com/store/apps/details?id=by.coolightman.randomizer)
 
-## _Screenshots
+## _Screenshots_
 ### Dark theme
 <img src="https://user-images.githubusercontent.com/43218153/201915840-3f232a2e-c89e-4c7c-b318-afeda3c90df1.jpg" alt="drawing" width="270"/> <img src="https://user-images.githubusercontent.com/43218153/201915845-608a920a-77fc-4d95-aed1-85074964a3cb.jpg" alt="drawing" width="270"/> <img src="https://user-images.githubusercontent.com/43218153/201915848-e70e4499-bec5-4e4f-a987-22e14aba746e.jpg" alt="drawing" width="270"/>
 
